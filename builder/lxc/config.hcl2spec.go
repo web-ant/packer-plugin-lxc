@@ -30,6 +30,7 @@ type FlatConfig struct {
 	Parameters          []string          `mapstructure:"template_parameters" required:"false" cty:"template_parameters" hcl:"template_parameters"`
 	EnvVars             []string          `mapstructure:"template_environment_vars" required:"true" cty:"template_environment_vars" hcl:"template_environment_vars"`
 	TargetRunlevel      *int              `mapstructure:"target_runlevel" required:"false" cty:"target_runlevel" hcl:"target_runlevel"`
+	Exclude             []string          `mapstructure:"exclude" required:"false" cty:"exclude" hcl:"exclude"`
 }
 
 // FlatMapstructure returns a new FlatConfig.
@@ -64,6 +65,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"template_parameters":        &hcldec.AttrSpec{Name: "template_parameters", Type: cty.List(cty.String), Required: false},
 		"template_environment_vars":  &hcldec.AttrSpec{Name: "template_environment_vars", Type: cty.List(cty.String), Required: false},
 		"target_runlevel":            &hcldec.AttrSpec{Name: "target_runlevel", Type: cty.Number, Required: false},
+		"exclude":                    &hcldec.AttrSpec{Name: "exclude", Type: cty.List(cty.String), Required: false},
 	}
 	return s
 }

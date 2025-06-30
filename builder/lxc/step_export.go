@@ -66,9 +66,20 @@ func (s *stepExport) Run(ctx context.Context, state multistep.StateBag) multiste
 	commands[0] = []string{
 		"lxc-stop", "--name", name,
 	}
-	commands[1] = []string{
-		"tar", "-C", containerDir, "--numeric-owner", "--anchored", "--exclude=./rootfs/dev/log", "-czf", outputPath, "./rootfs",
+
+	// Формируем команду tar
+	rootfsDir := filepath.Join(containerDir, "rootfs")
+	tarArgs := []string{"-C", rootfsDir, "--numeric-owner", "--anchored"}
+	for _, excl := range config.Exclude {
+		ex := excl
+		if len(ex) > 0 && ex[0] == '/' {
+			ex = ex[1:] // убираем ведущий слэш
+		}
+		tarArgs = append(tarArgs, "--exclude="+ex)
 	}
+	tarArgs = append(tarArgs, "-czf", outputPath, ".")
+
+	commands[1] = append([]string{"tar"}, tarArgs...)
 	commands[2] = []string{
 		"chmod", "+x", configFilePath,
 	}

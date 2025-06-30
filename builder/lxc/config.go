@@ -67,6 +67,10 @@ type Config struct {
 	// container to reach. Note some distributions (Ubuntu) simulate run levels
 	// and may report 5 rather than 3.
 	TargetRunlevel int `mapstructure:"target_runlevel" required:"false"`
+	// Paths to exclude from the exported tar.gz archive.
+	// These paths are relative to the container's rootfs directory.
+	// For example: ["/dev/log", "/var/spool/postfix/dev"]
+	Exclude []string `mapstructure:"exclude" required:"false"`
 
 	ctx interpolate.Context
 }

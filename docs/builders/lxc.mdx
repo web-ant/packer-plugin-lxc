@@ -64,6 +64,30 @@ Below is a fully functioning example.
 }
 ```
 
+## HCL Example
+
+```hcl
+packer {
+  required_plugins {
+    lxc = {
+      version = ">= 1.0.0"
+      source  = "github.com/hashicorp/lxc"
+    }
+  }
+}
+
+source "lxc" "example" {
+  config_file               = "/tmp/lxc/config"
+  template_name             = "ubuntu"
+  template_environment_vars = ["SUITE=trusty"]
+  exclude                  = ["/dev/log", "/var/spool/postfix/dev"]
+}
+
+build {
+  sources = ["source.lxc.example"]
+}
+```
+
 ## Configuration Reference
 
 ### Required:
@@ -115,3 +139,5 @@ Below is a fully functioning example.
   instance, you can prevent the container from inheriting the host machine's
   environment by specifying `["--clear-env"]`. Defaults to `[]`. See
   `man 1 lxc-attach` for available options.
+
+- `exclude` (array of strings) - Paths to exclude from the exported tar.gz archive. These paths are relative to the container's rootfs directory. For example: `["/dev/log", "/var/spool/postfix/dev"]`.
